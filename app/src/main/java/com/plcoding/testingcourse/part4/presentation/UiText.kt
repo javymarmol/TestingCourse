@@ -1,0 +1,39 @@
+package com.plcoding.testingcourse.part4.presentation
+
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+
+/**
+ * Created by Heyner Javier Marmol @javymarmol on 29/05/24.
+ * javymarmol.com
+ * Copyright (c) 2024 JavyMarmol. All rights reserved.
+ **/
+sealed class UiText {
+    data class DynamicString(val value: String): UiText()
+    data class StringResource(
+        val id: Int,
+        val args: List<Any> = emptyList()
+    ): UiText()
+
+    fun asString(context: Context): String {
+        return when(this) {
+            is DynamicString -> value
+            is StringResource -> context.getString(
+                id,
+                *args.toTypedArray()
+            )
+        }
+    }
+    @Composable
+    fun asString(): String {
+        val context = LocalContext.current
+        return when(this) {
+            is DynamicString -> value
+            is StringResource -> context.getString(
+                id,
+                *args.toTypedArray()
+            )
+        }
+    }
+}
